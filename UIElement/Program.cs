@@ -10,34 +10,32 @@ namespace UIElement
     {
         static void Main(string[] args)
         {
-            int health;
-            int maxHealth = 10;
-            int healthConvertInPercent;
+            string health;
+            int maxHealth = 100;
+            int convertHealth;
 
-                Console.SetCursorPosition(0, 1);
-                Console.Write("введите количество здоровья в процентах:");
-                health = Convert.ToInt32(Console.ReadLine());
+            Console.SetCursorPosition(0, 1);
+            Console.Write("введите количество здоровья:");
+            health = Console.ReadLine();
 
-            healthConvertInPercent = health / maxHealth;
-
-            if (healthConvertInPercent >= maxHealth)
-                    healthConvertInPercent = maxHealth;
-
-                HealthBar(healthConvertInPercent, maxHealth, ConsoleColor.Red, 0);
+           if (int.TryParse(health, out convertHealth))
+           {
+               if(convertHealth > maxHealth)
+                   convertHealth = maxHealth;
+           }
+            
+                DrawHealthBar(convertHealth, maxHealth, ConsoleColor.Red, 0);
         }
 
-        static void HealthBar (int value, int maxValue, ConsoleColor color, int position)
+        static void DrawHealthBar(int value, int maxValue, ConsoleColor color, int position)
         {
             ConsoleColor defaultColor = Console.BackgroundColor;
 
             string bar = null;
-            char fillBar = '#';
+            char fillBar = ' ';
             char emptyBar = '_';
 
-            for (int i = 0; i < value; i++)
-            {
-                bar += fillBar;
-            }
+            AddSymbolsInHealthBar(0, value, fillBar, ref bar);
 
             Console.SetCursorPosition (position, 0);
             Console.Write('[');
@@ -47,12 +45,15 @@ namespace UIElement
 
             bar = null;
 
-            for (int i = value ;i < maxValue; i++)
-            {
-                bar += emptyBar;
-            }
+            AddSymbolsInHealthBar(value, maxValue, emptyBar, ref bar);
 
             Console.WriteLine(bar + ']');
+        }
+
+        static void AddSymbolsInHealthBar(int value, int maxValue, char symbol, ref string bar)
+        {
+            for (int i = value; i < maxValue; i++)
+                 bar += symbol;
         }
     }
 }
