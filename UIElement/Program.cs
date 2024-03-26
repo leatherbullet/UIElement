@@ -10,21 +10,12 @@ namespace UIElement
     {
         static void Main(string[] args)
         {
-            string health;
-            int maxHealth = 100;
-            int convertHealth;
+            int maxHealth = 10;
+            int percentHealth = 0;
 
-            Console.SetCursorPosition(0, 1);
-            Console.Write("введите количество здоровья:");
-            health = Console.ReadLine();
-
-           if (int.TryParse(health, out convertHealth))
-           {
-               if(convertHealth > maxHealth)
-                   convertHealth = maxHealth;
-           }
+            GetHelthColculation(ref percentHealth, maxHealth);
             
-                DrawHealthBar(convertHealth, maxHealth, ConsoleColor.Red, 0);
+            DrawHealthBar(percentHealth, maxHealth, ConsoleColor.Red, 0);
         }
 
         static void DrawHealthBar(int value, int maxValue, ConsoleColor color, int position)
@@ -37,12 +28,8 @@ namespace UIElement
 
             AddSymbolsInHealthBar(0, value, fillBar, ref bar);
 
-            Console.SetCursorPosition (position, 0);
-            Console.Write('[');
-            Console.BackgroundColor = color;
-            Console.Write(bar);
-            Console.BackgroundColor = defaultColor;
-
+            GetColorBar(position, color, bar);
+            
             bar = null;
 
             AddSymbolsInHealthBar(value, maxValue, emptyBar, ref bar);
@@ -54,6 +41,36 @@ namespace UIElement
         {
             for (int i = value; i < maxValue; i++)
                  bar += symbol;
+        }
+
+        static void GetColorBar(int position, ConsoleColor color, string bar)
+        {
+            ConsoleColor defaultColor = Console.BackgroundColor;
+
+            Console.SetCursorPosition(position, 0);
+            Console.Write('[');
+            Console.BackgroundColor = color;
+            Console.Write(bar);
+            Console.BackgroundColor = defaultColor;
+        }
+
+        static void GetHelthColculation(ref int percentHealth, int maxHealth)
+        {
+            int convertHealth;
+            string health;
+            int maxPercent = 100;
+
+            Console.SetCursorPosition(0, 1);
+            Console.Write("введите процент заполненности здоровья:");
+            health = Console.ReadLine();
+
+            if (int.TryParse(health, out convertHealth))
+            {
+                percentHealth = maxHealth * convertHealth / maxPercent;
+
+                if (percentHealth > maxHealth)
+                    percentHealth = maxHealth;
+            }
         }
     }
 }
